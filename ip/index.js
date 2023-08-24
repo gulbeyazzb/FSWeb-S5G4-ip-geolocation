@@ -1,27 +1,24 @@
 //axios import buraya gelecek
-
+import axios from "axios";
 var benimIP;
-
 
 // ------------ değiştirmeyin --------------
 // licensed to Ergineer 2022
 require("babel-core/register");
 require("babel-polyfill");
-async function ipAdresimiAl(){
-	await axios({
-		method: 'get',
-		url: 'https://apis.ergineer.com/ipadresim',
-	})
-	.then(function (response) {
-		return response.data
-	})
-	.then(function (a) {
-		benimIP=a
-	});
-}				
+async function ipAdresimiAl() {
+  await axios({
+    method: "get",
+    url: "https://apis.ergineer.com/ipadresim",
+  })
+    .then(function (response) {
+      return response.data;
+    })
+    .then(function (a) {
+      benimIP = a;
+    });
+}
 // ------------ değiştirmeyin --------------
-
-
 /*
 	ADIM 1: axios kullanarak, aşağıdaki URL'ye GET sorgusu atacağız
     (tag içindeki yere kendi ipnizi yazarak URL'yi oluşturun):
@@ -67,6 +64,57 @@ async function ipAdresimiAl(){
 	Örnek dinamik URL kullanımı: var url = "https://apis.ergineer.com/ipgeoapi/"+benimIP; 
 */
 
-
-
 //kodlar buraya gelecek
+function myCountry(myId) {
+  const div_card = document.createElement("div");
+  div_card.classList.add("card");
+
+  const img = document.createElement("img");
+  img.src = `https://flagsapi.com/TR/flat/64.png`;
+
+  const div_info = document.createElement("div");
+  div_info.className = "card-info";
+
+  const h3 = document.createElement("h3");
+  h3.className = "ip";
+  h3.textContent = myId.sorgu;
+
+  const p_ulke = document.createElement("p");
+  p_ulke.textContent = myId.ülke + " {" + myId.ülkeKodu + "}";
+
+  const p_enlem = document.createElement("p");
+  p_enlem.textContent = "Enlem: " + myId.enlem + "Boylam: " + myId.boylam;
+
+  const p_sehir = document.createElement("p");
+  p_sehir.textContent = myId.şehir;
+
+  const p_saat = document.createElement("p");
+  p_saat.textContent = "Saat: " + myId.saatdilimi;
+
+  const p_para = document.createElement("p");
+  p_para.textContent = `Para: ${myId.parabirimi}`;
+
+  const p_isp = document.createElement("p");
+  p_isp.textContent = `ISP: ${myId.isp}`;
+
+  div_info.append(h3, p_ulke, p_enlem, p_sehir, p_saat, p_para, p_isp);
+  div_card.append(img, div_info);
+
+  return div_card;
+}
+
+ipAdresimiAl().then(() => {
+  const url = "https://apis.ergineer.com/ipgeoapi/" + benimIP;
+  axios
+    .get(url)
+    .then((res) => {
+      return res.data;
+    })
+    .then((country) => {
+      const card = document.querySelector(".cards");
+      card.append(myCountry(country));
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
